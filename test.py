@@ -17,4 +17,3 @@ test_cases = [a_string, b_string]
 for index, case in enumerate(test_cases):
     res_corr, res_incorr = dh.prep_input(case)
     print(f'TEST CASE {index + 1}:\nSOURCE:\n{case}\nTARGET_CORRECT:\n{res_corr}\nTARGET_INCORRECT:\n{dh.wrap_bad_segments(res_incorr)}\n')
-

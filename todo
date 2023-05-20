@@ -1,6 +1,5 @@
 - obsluga innego kodowania niz utf-8
 - obsluga bledow na imporcie
-- rozkminic te quoty
 
 Test cases:
 C:\Users\ptkma\OneDrive\Pulpit\inz\final\venv\OneDrive\Pulpit\Scripts\python.exe "C:\Program Files\JetBrains\PyCharm Community Edition 2020.2.1\plugins\python-ce\helpers\pydev\pydevconsole.py" --mode=client --port=65517

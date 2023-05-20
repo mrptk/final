@@ -42,15 +42,19 @@ def prep_input(source):
 
 
 def post_output(target):
-    #([.,;:\"?{}\[\]()!\-$£])           `
-    def fix_quots(segment):
+    def fix_segment(segment):
         segment = re.sub(r'( )([.,;:?!}”\]\)])', lambda x: x.group(2), segment)
         segment = re.sub(r'([{\[(„])( )', lambda x: x.group(1), segment)
+        segment = re.sub(r"( ?)(')( ?)", lambda x: x.group(2), segment)
+        segment = segment[:1].upper() + segment[1:]
+        return segment
 
     post_target = []
 
     for sentence in target:
+        post_target.append(fix_segment(sentence))
 
+    return " ".join(post_target)
 
 
 def wrap_bad_segments(segments):
@@ -58,6 +62,6 @@ def wrap_bad_segments(segments):
     for segment, bad_chars in segments:
         if len(segment) > 20:
             segment = segment[:20] + '…'
-        result += f'Segment:\t{segment}\nzawiera niedopuszczalne znaki: {bad_chars}\n'
+        result += f'[UWAGA] Segment:\t{segment}\tzawiera niedopuszczalne znaki: {bad_chars}\n'
 
     return result

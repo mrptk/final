@@ -19,6 +19,8 @@ class Waiter:
             for i in range(0, 6):
                 print_with_cr(f'{self.__msg}{"." * i}')
                 time.sleep(0.75)
+                if not self.__continue:
+                    break
 
         print_with_cr(self.__msg_end)
 
