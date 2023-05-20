@@ -1,0 +1,126 @@
+- obsluga innego kodowania niz utf-8
+- obsluga bledow na imporcie
+- rozkminic te quoty
+
+Test cases:
+C:\Users\ptkma\OneDrive\Pulpit\inz\final\venv\OneDrive\Pulpit\Scripts\python.exe "C:\Program Files\JetBrains\PyCharm Community Edition 2020.2.1\plugins\python-ce\helpers\pydev\pydevconsole.py" --mode=client --port=65517
+import sys; print('Python %s on %s' % (sys.version, sys.platform))
+sys.path.extend(['C:\\Users\\ptkma\\OneDrive\\Pulpit\\inz\\final', 'C:/Users/ptkma/OneDrive/Pulpit/inz/final'])
+PyDev console: starting.
+Python 3.7.8 (tags/v3.7.8:4b47a5b6ba, Jun 28 2020, 08:53:46) [MSC v.1916 64 bit (AMD64)] on win32
+import sys
+sys.stdout.encoding
+'UTF-8'
+sys.stdin.encoding
+'UTF-8'
+import tensorflow as tf
+2023-05-20 14:32:54.426272: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'cudart64_110.dll'; dlerror: cudart64_110.dll not found
+2023-05-20 14:32:54.426669: I tensorflow/stream_executor/cuda/cudart_stub.cc:29] Ignore above cudart dlerror if you do not have a GPU set up on your machine.
+import tensorflow_text as tf
+import tensorflow as tf
+import tensorflow_text as text
+os.chdir('C:/Users/ptkma/OneDrive/Pulpit/inz/final')
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Microsoft Visual Studio\Shared\Python37_64\lib\code.py", line 90, in runcode
+    exec(code, self.locals)
+  File "<input>", line 1, in <module>
+NameError: name 'os' is not defined
+import os
+os.chdir('C:/Users/ptkma/OneDrive/Pulpit/inz/final')
+os.getcwd()
+'C:\\Users\\ptkma\\OneDrive\\Pulpit\\inz\\final'
+translator = tf.saved_model.load('translator_en_pl')
+2023-05-20 14:35:04.144828: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'nvcuda.dll'; dlerror: nvcuda.dll not found
+2023-05-20 14:35:04.144971: W tensorflow/stream_executor/cuda/cuda_driver.cc:263] failed call to cuInit: UNKNOWN ERROR (303)
+2023-05-20 14:35:04.148920: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:169] retrieving CUDA diagnostic information for host: PATRUCH-NL0NH3PD
+2023-05-20 14:35:04.149311: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:176] hostname: PATRUCH-NL0NH3PD
+2023-05-20 14:35:04.149881: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX AVX2
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+def translate(src):
+    return translator(src).numpy().decode('utf-8')
+translate('i want to go home.')
+'chcę iść do domu .'
+translate('i want to go home.')
+'chcę iść do domu .'
+translate('the cat purred .')
+'kotka purd .'
+translate('the chicken clucked .')
+'kurczak spieszy .'
+translate('I like your smile')
+'właściciel jak uśmiech .'
+translate('i like your smile')
+'lubię uśmiechnąć się .'
+translate('you are so helpful ')
+'jesteś tak pomocny .'
+translate('grandma has a new puppy named charlie')
+'babcia ma nowy szczeniak charlie charlieharlie'
+translate('my favorite color is blue .')
+'moje ulubione kolor jest niebiesko .'
+translate('she got a new car')
+'dostała nowy samochód .'
+isupper(',')
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Microsoft Visual Studio\Shared\Python37_64\lib\code.py", line 90, in runcode
+    exec(code, self.locals)
+  File "<input>", line 1, in <module>
+NameError: name 'isupper' is not defined
+(',').isupper()
+False
+('Ą').isupper()
+True
+translate('it’s raining outside right now .')
+'deszczupla się na zewnątrz .'
+translate("it 's raining outside right now .")
+'teraz deszczuje się na zewnątrz .'
+'’' == '’'
+True
+'ść'.upper()
+'ŚĆ'
+my_str = '" hi ", he said " why " she asked " i dont know " he answered'
+import re
+re.sub(r'(")(.*?)(")', lambda x: '"' + x.group(1).strip() + '"', my_str)
+'""", he said """ she asked """ he answered'
+re.sub(r'(")(.*?)(")', lambda x: '"' + x.group(0).strip() + '"', my_str)
+'"" hi "", he said "" why "" she asked "" i dont know "" he answered'
+re.sub(r'(")(.*?)(")', lambda x: '"' + x.group(2).strip() + '"', my_str)
+'"hi", he said "why" she asked "i dont know" he answered'
+translate("it 's raining outside langley's house.")
+'deszcz z zewnątrz domu langleya .'
+translate("say ´ i am stupid ´")
+'obrzydliwy , że jestem głupio .'
+translate("utter ´ i am stupid ´")
+'opiekuńczowy , o którym jestem głupiona .'
+translate("he didn ' t utter a word")
+'nie miał nic z tego słowa .'
+translate("he did n't utter a word")
+'nie miał nic z tego słowa .'
+translate("he does n't utter a word")
+'nie ma słowa o slumsie'
+translate("this is the woman I told you about")
+'to jest opowiedzianka o tym , że kobieta mówi o tym , że ta kobieta mówi ci o tym , co mówi .'
+translate("I saw that man yesterday")
+'witryny zobaczył ten człowiek wczoraj .'
+translate("i saw that man yesterday")
+'zobaczyłam , że ten mężczyzna wczoraj o tym .'
+translate("this is the woman i told you about")
+'to jest kobieta , o której wam opowiedziałem .'
+translate("i saw this man yesterday")
+'zobaczyłam ten mężczyzna wczoraj .'
+translate("it belongs to this man")
+'należy do tego człowieka .'
+translate("So we were taught at school")
+'wzywaliśmy do szkoły , nauczyliśmy się w szkole .'
+translate("so we were taught at school")
+'nauczyliśmy się w szkole .'
+translate("he said ' help me please '")
+'powiedział , że pomóż mi pomóżcie .'
+translate("so we were taught at school")
+'nauczyliśmy się w szkole .'
+translate("he said ' help me please '")
+'powiedział , że pomóż mi pomóżcie .'
+translate("he asked ' do you love me '")
+'zapytał , że kocham moją miłość'
+translate('he asked " do you love me "')
+'zapytał : " kocham cię "'
+translate('he said " help me please "')
+'powiedział : " pomóż mi " .'
