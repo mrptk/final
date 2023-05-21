@@ -64,11 +64,28 @@ class Main:
         print('[info]\tProgram tłumaczy teksty z języka angielskiego na polski.')
         print('[info]\tNie wszystkie znaki są dozwolone. Program pominie segmenty zawierające niedozwolone znaki.')
         print('[info]\tDo cudzysłowów używaj ".')
+        print('[info]\tProgram nie rozpoznaje nazw własnych. Sprawdź pisownię wielką/małą literą w tłumaczeniu.')
 
         while not exit_program:
-            user_input = input('\n * Podaj tekst źródłowy: * \n')
+            lines = []
+            print('\n * Podaj tekst źródłowy: *')
+            print('Wciśnij dwa razy Enter, aby zatwierdzić')
+            while True:
+                line = input()
+                if line:
+                    lines.append(line)
+                else:
+                    break
 
-            print(f' *** Tekst docelowy: *** \n{self.__translate(user_input)}')
+            if len(lines) > 1:
+                lines = "\n".join(lines)
+            elif len(lines) == 0:
+                print("Nie znaleziono tekstu do tłumaczenia.")
+            else:
+                lines = lines[0]
+
+            print(f' *** Tekst docelowy: *** \n{self.__translate(lines)}')
+
             decision = ''
             while decision not in ['t', 'n']:
                 decision = input('\nKontynuować? t/n\t')
