@@ -1,3 +1,6 @@
+"""
+    Główny moduł, który należy uruchomić, aby rozpocząć pracę z programem.
+"""
 from waiter import Waiter
 import data_handler as dh
 import logging
@@ -6,9 +9,15 @@ import sys
 
 
 def tf_import():
+    """
+    Funkcja służąca do importowania modułów tensorflow i tensorflow-text w taki sposób, aby w konsoli nie wyświetlały się
+    komunikaty zgłaszane podczas pobierania. Zwraca krotkę z oboma modułami.
+    """
     import os
-    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
     import warnings
+    import logging
+
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
     warnings.simplefilter(action='ignore', category=FutureWarning)
     warnings.simplefilter(action='ignore', category=Warning)
 
@@ -17,22 +26,33 @@ def tf_import():
     tf.get_logger().setLevel('INFO')
     tf.autograph.set_verbosity(0)
 
-    import logging
     tf.get_logger().setLevel(logging.ERROR)
 
     return tf, text
 
 
 class TranslatorException(Exception):
+    """
+    Klasa używana do zgłaszania i obsługi większości wyjątków podczas działania programu.
+    """
     pass
 
 
 class Main:
+    """
+    Klasa, której obiekt służy do sterowania programem.
+    """
     def __init__(self):
+        """
+        Konstruktor inicjalizujący wszystkie pola wartością None
+        """
         self.waiter = None
         self.__translator = None
 
     def __call__(self):
+        """
+        Najważniejsza metoda w klasie, która de facto rozpoczyna działanie programu i uruchamia główną pętlę.
+        """
         print("PRACA INŻYNIERSKA 'TŁUMACZENIE MASZYNOWE KRÓTKICH TEKSTÓW'\nautor: mgr Patryk Edward Mazur\n"
               "promotor: dr Piotr Wrzeciono")
         print()
@@ -48,21 +68,32 @@ class Main:
         except ModuleNotFoundError:
             raise TranslatorException('Nie znaleziono modułu tensorflow i/lub tensorflow-text. '
                   'Upewnij się, że oba moduły są zainstalowane.')
+        except Exception:
+            raise TranslatorException('Wystąpił błąd podczas importowania pakietów tensorflow i/lub tensorflow-text.'
+                                      ' Upewnij się, że spełnione są wszystkie wymagania.')
         self.waiter.stop(None)
 
         self.waiter = Waiter(msg='Ładuję model tłumaczeniowy', end='Ładowanie modelu tłumaczeniowego zakończone!')
         self.waiter.start()
-        self.__translator = tf.saved_model.load('translator_en_pl')
+        try:
+            self.__translator = tf.saved_model.load('translator_en_pl')
+        except Exception:
+            raise TranslatorException('Wystąpił błąd podczas ładowania modelu tłumaczeniowego. Upewnij się, że'
+                                      ' spełnione są wszystkie wymagania.')
         self.waiter.stop(None)
 
-        self.__main_loop()
+        self.main_loop()
 
-    def __main_loop(self):
+    def main_loop(self):
+        """
+        Prywatna metoda implementująca główną pętlę programu, w której w każdej iteracji użytkownik proszony jest o podanie
+        tekstu źródłowego i, po wyświetleniu tłumaczenia, zapytywany, czy kontynuować działanie.
+        """
         exit_program = False
 
         print('\n ***** Witaj! *****')
         print('[info]\tProgram tłumaczy teksty z języka angielskiego na polski.')
-        print('[info]\tNie wszystkie znaki są dozwolone. Program pominie segmenty zawierające niedozwolone znaki.')
+        print('[info]\tProgram nie rozpoznaje wszystkich znaków i pominie segmenty, które je zawierają.')
         print('[info]\tDo cudzysłowów używaj ".')
         print('[info]\tProgram nie rozpoznaje nazw własnych. Sprawdź pisownię wielką/małą literą w tłumaczeniu.')
 
@@ -84,7 +115,7 @@ class Main:
             else:
                 lines = lines[0]
 
-            print(f' *** Tekst docelowy: *** \n{self.__translate(lines)}')
+            print(f' *** Tekst docelowy: *** \n{self.translate(lines)}')
 
             decision = ''
             while decision not in ['t', 'n']:
@@ -93,7 +124,12 @@ class Main:
                     exit_program = True
                     print('\nŻegnam!')
 
-    def __translate(self, src):
+    def translate(self, src):
+        """
+        Prywatna metoda, której zadaniem jest użycie modelu tłumaczeniowego do przetłumaczenia podanego przez
+        użytkownika tekstu. To tutaj dokonywane jest formatowanie danych wejściowych i wyjściowych.
+        Zwraca przetłumaczony i sformatowany tekst.
+        """
         src, src_incorrect = dh.prep_input(src)
         target = []
         result = ''

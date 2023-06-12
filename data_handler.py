@@ -1,4 +1,4 @@
-from nltk.tokenize import sent_tokenize, word_tokenize
+from nltk.tokenize import sent_tokenize
 import re
 
 allowed_chars = ['!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/', '0', '1', '2', '3', '4',
@@ -62,6 +62,6 @@ def wrap_bad_segments(segments):
     for segment, bad_chars in segments:
         if len(segment) > 20:
             segment = segment[:20] + '…'
-        result += f'[UWAGA] Segment:\t{segment}\tzawiera niedopuszczalne znaki: {bad_chars}\n'
+        result += f'[UWAGA] Segment:\t{segment}\tzawiera nieobsługiwane znaki: {bad_chars}\n'
 
     return result
